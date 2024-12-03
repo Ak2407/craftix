@@ -19,7 +19,7 @@ const InputBox = ({
       value={inputValue}
       onChange={handleInputChange}
       onKeyDown={handleKeyPress}
-      className=" resize-none h-[150px] text-slate-600 text-base"
+      className=" resize-none h-[150px] text-slate-600 text-base bg-white"
     />
   );
 };

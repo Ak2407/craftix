@@ -22,7 +22,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col ">
       <motion.div
         initial={{ y: "40vh" }}
         animate={isAnimated ? { y: 0 } : { y: "40vh" }}
@@ -36,7 +36,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex-1 mx-4 my-8 rounded-lg border border-gray-200 h-full "
+          className="mx-4 my-8 h-full flex-1"
         >
           <CodeShowcase />
         </motion.div>
