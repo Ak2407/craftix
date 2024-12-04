@@ -6,7 +6,7 @@ const CodeShowcase = () => (
       showLineNumbers: true,
       showTabs: true,
       showConsoleButton: true,
-      editorHeight: 600,
+      editorHeight: 700,
     }}
   />
 );

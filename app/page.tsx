@@ -22,21 +22,21 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col ">
+    <div className="min-h-screen items-center p-8 gap-6 flex flex-col ">
       <motion.div
         initial={{ y: "40vh" }}
         animate={isAnimated ? { y: 0 } : { y: "40vh" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="text-center"
+        className="text-center w-full "
       >
-        <Heading showSubHeading={!isAnimated} />
+        <Heading creating={isAnimated} />
       </motion.div>
 
       {isAnimated && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="mx-4 my-8 h-full flex-1"
+          className=" border-4 border-gray-200 w-full"
         >
           <CodeShowcase />
         </motion.div>
@@ -46,9 +46,10 @@ export default function Home() {
         initial={{ y: "40vh" }}
         animate={isAnimated ? { y: 0 } : { y: "40vh" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="w-full max-w-2xl mx-auto px-4 mb-8"
+        className="w-full max-w-xl mx-auto "
       >
         <InputBox
+          creating={isAnimated}
           inputValue={inputValue}
           handleInputChange={handleInputChange}
           handleKeyPress={handleKeyPress}

@@ -1,18 +1,16 @@
 type HeadingProps = {
-  showSubHeading?: boolean;
+  creating: boolean;
 };
 
-const Heading = ({ showSubHeading }: HeadingProps) => {
+const Heading = ({ creating }: HeadingProps) => {
+  const text1 = "Tell me what to cook today ? 👨‍🍳";
+  const text2 = "Craftix - Your own personal coding assistant";
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <h1 className="text-6xl font-bold ">Craftix</h1>
-      {showSubHeading && (
-        <h2 className="text-lg font-light text-slate-500 mb-4 max-w-[1000px] italic ">
-          Craftix is a code editor that allows you to create and edit code
-          files. It is a powerful tool for developers, designers, and anyone who
-          needs to work with code.
-        </h2>
-      )}
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold ">
+        {creating ? text2 : text1}
+      </h1>
     </div>
   );
 };
