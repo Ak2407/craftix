@@ -1,12 +1,22 @@
 import { Sandpack } from "@codesandbox/sandpack-react";
 
-const CodeShowcase = () => (
+type CodeShowcaseProps = {
+  code: string;
+};
+
+const CodeShowcase = ({ code }: CodeShowcaseProps) => (
   <Sandpack
+    template="react"
+    files={{
+      "/App.js": code,
+    }}
     options={{
-      showLineNumbers: true,
+      showNavigator: true,
       showTabs: true,
-      showConsoleButton: true,
+      showLineNumbers: true,
+      autorun: true,
       editorHeight: 700,
+      editorWidthPercentage: 60,
     }}
   />
 );

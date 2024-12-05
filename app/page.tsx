@@ -1,60 +1,73 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import InputBox from "@/components/InputBox";
-import Heading from "@/components/Heading";
-import CodeShowcase from "@/components/CodeShowcase";
+import { useCompletion } from "ai/react";
+import { Sandpack } from "@codesandbox/sandpack-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState("");
-  const [isAnimated, setIsAnimated] = useState(false);
+  const [code, setCode] = useState(`
+// Welcome to the AI Code Generator!
+// Enter a prompt to generate React code.
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
-  };
+function App() {
+  return (
+    <div>
+      <h1>Hello, AI-generated code!</h1>
+      <p>Your code will appear here.</p>
+    </div>
+  );
+}
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && inputValue.trim() !== "") {
-      setIsAnimated(true);
-      setInputValue("");
-    }
+export default App;
+`);
+
+  const { complete } = useCompletion({
+    api: "/api/generate",
+    onFinish: (prompt, completion) => {
+      setCode(completion);
+    },
+    onMessage: (message) => {
+      setCode((prevCode) => prevCode + message);
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const prompt = formData.get("prompt") as string;
+    setCode(""); // Clear existing code
+    complete(prompt);
   };
 
   return (
-    <div className="min-h-screen items-center p-8 gap-6 flex flex-col ">
-      <motion.div
-        initial={{ y: "40vh" }}
-        animate={isAnimated ? { y: 0 } : { y: "40vh" }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="text-center w-full "
-      >
-        <Heading creating={isAnimated} />
-      </motion.div>
-
-      {isAnimated && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className=" border-4 border-gray-200 w-full"
-        >
-          <CodeShowcase />
-        </motion.div>
-      )}
-
-      <motion.div
-        initial={{ y: "40vh" }}
-        animate={isAnimated ? { y: 0 } : { y: "40vh" }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="w-full max-w-xl mx-auto "
-      >
-        <InputBox
-          creating={isAnimated}
-          inputValue={inputValue}
-          handleInputChange={handleInputChange}
-          handleKeyPress={handleKeyPress}
-        />
-      </motion.div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">AI Code Generator</h1>
+      <form onSubmit={handleSubmit} className="mb-4">
+        <div className="flex gap-2">
+          <Input
+            type="text"
+            name="prompt"
+            placeholder="Describe the React component you want to build..."
+            className="flex-grow"
+          />
+          <Button type="submit">Generate Code</Button>
+        </div>
+      </form>
+      <Sandpack
+        template="react"
+        files={{
+          "/App.js": code,
+        }}
+        options={{
+          showNavigator: false,
+          showTabs: false,
+          showLineNumbers: true,
+          showInlineErrors: true,
+          editorHeight: 700,
+        }}
+      />
     </div>
   );
 }
