@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   SandpackCodeEditor,
   SandpackLayout,
@@ -12,9 +12,13 @@ import { Input } from "@/components/ui/input";
 import { ChatCompletionStream } from "together-ai/lib/ChatCompletionStream.mjs";
 
 export default function Home() {
+  const [hydrated, setHydrated] = useState(false);
+
+  const [key, setKey] = useState(0); // To trigger Sandpack reload
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState(`
+
 
 // Welcome to the AI Code Generator!
 // Enter a prompt to generate React code.
@@ -37,7 +41,14 @@ function App() {
 
 export default App;
 `);
-  const [key, setKey] = useState(0); // To trigger Sandpack reload
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) {
+    return <div>Loading...</div>;
+  }
 
   async function generateCode(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -58,7 +69,11 @@ export default App;
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">AI Code Generator</h1>
+      <h1 className="text-3xl font-bold ">Craftix </h1>
+      <p className="mb-6 text-base text-gray-600">
+        Your Personal AI Coding Assistant. Tell it what you want and it will
+        generate the code for you.
+      </p>
       <form onSubmit={generateCode} className="mb-4">
         <div className="flex gap-2">
           <Input
