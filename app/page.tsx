@@ -115,7 +115,7 @@ export default App;
         }}
       >
         <SandpackLayout>
-          <SandpackCodeEditor style={{ height: 700 }} />
+          <SandpackCodeEditor style={{ height: 700 }} showLineNumbers />
           {loading ? (
             <div className="flex justify-center items-center h-full w-full p-4">
               <h1>
