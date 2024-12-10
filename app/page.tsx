@@ -12,8 +12,10 @@ import { Input } from "@/components/ui/input";
 import { ChatCompletionStream } from "together-ai/lib/ChatCompletionStream.mjs";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState(`
+
 // Welcome to the AI Code Generator!
 // Enter a prompt to generate React code.
 
@@ -35,9 +37,11 @@ function App() {
 
 export default App;
 `);
+  const [key, setKey] = useState(0); // To trigger Sandpack reload
 
   async function generateCode(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
     setCode(""); // Clear existing code
     const res = await fetch("/api/generate", {
       method: "POST",
@@ -46,6 +50,10 @@ export default App;
 
     const runner = ChatCompletionStream.fromReadableStream(res.body);
     runner.on("content", (delta) => setCode((text) => text + delta));
+    runner.on("end", () => {
+      setLoading(false);
+      setKey((prevKey) => prevKey + 1); // Increment key to reload
+    });
   }
 
   return (
@@ -65,6 +73,7 @@ export default App;
         </div>
       </form>
       <SandpackProvider
+        key={key} // Add key to trigger re-render
         template="react"
         options={{
           externalResources: [
@@ -92,11 +101,17 @@ export default App;
       >
         <SandpackLayout>
           <SandpackCodeEditor style={{ height: 700 }} />
-
-          <SandpackPreview style={{ height: 700 }} />
+          {loading ? (
+            <div className="flex justify-center items-center h-full w-full p-4">
+              <h1>
+                Code is being Generated Please Do not close or refresh the page
+              </h1>
+            </div>
+          ) : (
+            <SandpackPreview style={{ height: 700 }} />
+          )}
         </SandpackLayout>
       </SandpackProvider>
-      ;
     </div>
   );
 }
